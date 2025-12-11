@@ -21,3 +21,16 @@ async function loggInn(event) {
         alert(result.message);
     }
 }
+
+async function loggUt() {
+    const response = await fetch("/logout", {
+        method: "POST"
+    });
+
+    if (response.ok) {
+        alert("Du er nå logget ut.");
+        window.location.href = "/login.html"; // Omdirigerer til login-siden
+    } else {
+        alert("Noe gikk galt under utlogging.");
+    }
+}

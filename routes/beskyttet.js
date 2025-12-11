@@ -3,11 +3,12 @@ const router = express.Router();
 const db = require('../db');
 const kreverInnlogging = require(`../auth.js`);
 const bcrypt = require(`bcrypt`);
+const path = require("path");
+
 
 router.get("/", kreverInnlogging, (req, res) => {
-    // Sender data vi siden man er inne på
-    res.send(`Velkommen ${req.session.bruker.fornavn}! Dette er en beskyttet side`);
+    res.sendFile(path.join(__dirname, "../public/beskyttet.html"));
+});
 
-})
 
 module.exports = router;
