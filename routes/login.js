@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
-const bcrypt = require(`bcrypt`);
 const path = require(`path`);
 
 
@@ -15,7 +14,7 @@ router.get(`/`, (req, res) => {
 router.post(`/`, async (req, res) => {
     const { epost, passord } = req.body;
 
-    const bruker = db.prepare("SELECT * FROM person_new WHERE epost = ?").get(epost);
+    const bruker = db.prepare("SELECT * FROM person WHERE epost = ?").get(epost);
     if (!bruker) {
         return res.status(401).json({ message: "Feil epost eller passord" }) // Lar ikke hackere vite om det er epost eller passord som er feil.
     }

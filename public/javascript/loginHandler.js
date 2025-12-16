@@ -34,7 +34,3 @@ async function loggUt() {
         alert("Noe gikk galt under utlogging.");
     }
 }
-
-async function goToCreateUser() { 
-    window.location.href = "/createUser";
-}
