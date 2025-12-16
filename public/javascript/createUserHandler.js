@@ -28,5 +28,10 @@ async function leggTilPerson(event) {
     // Vent på og parse svaret fra serveren som JSON
     const result = await response.json();
     // Vis en alert-boks med meldingen fra serveren (f.eks. suksess eller feil)
-    alert(result.message);
+    if (response.ok) {
+        alert(result.message);
+        window.location.href = "/login";
+    } else {
+        alert(result.message);
+    }
 }

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const bcrypt = require(`bcrypt`);
 const path = require(`path`);
 
 // Håndter GET-forespørsel til "/createUser" ved å sende HTML-filen for brukeroppretting
@@ -8,11 +9,14 @@ router.get(`/`, (req, res) => {
     res.sendFile(path.join(__dirname, `../public/createUser.html`));
 })
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
     const { fornavn, etternavn, epost, tlf, passord } = req.body;
+
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(passord, saltRounds);
     
     // Sjekke om epost allerede finnes
-    const existingUser = db.prepare("SELECT id FROM person WHERE epost = ?").get(epost);
+    const existingUser = db.prepare("SELECT id FROM person WHERE epost = ?").get(epost); // get(epost) erstatter spørsmålstegnet i spørringen
     if (existingUser) {
         return res.status(400).json({ message: "E-postadressen er allerede i bruk." });
     }
@@ -27,7 +31,7 @@ router.post("/", (req, res) => {
     try {
         // Legg til ny bruker i databasen
         const stmt = db.prepare("INSERT INTO person (id, fornavn, etternavn, epost, tlf, passord) VALUES (?,?,?,?,?,?)");
-        stmt.run(newId, fornavn, etternavn, epost, tlf, passord);
+        stmt.run(newId, fornavn, etternavn, epost, tlf, hashedPassword);
         res.json({ message: "Ny bruker lagt til!" });
     } catch (err) {
         console.error("Databasefeil:", err);
